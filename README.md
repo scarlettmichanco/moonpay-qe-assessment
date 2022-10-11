@@ -9,6 +9,7 @@ The system under test the [Stripe Checkout](https://checkout.stripe.dev/preview)
 1. Explain your test approach (e.g. test types, techniques, tools)
   * UI/E2E tests for all ui components - will use TestCafe for this
 2. Identify which scenarios you feel are important to test
+  ```
   * Check if iFrame is viewable
   * Check if all the labels/input fields are visible
   * Verify that payment options are visible and credit card numbers are masked.
@@ -22,6 +23,7 @@ The system under test the [Stripe Checkout](https://checkout.stripe.dev/preview)
   * Test each card type (success/authorization/decline)
   * Verify you cant proceed until all required fields are filled
   * Authenticate email is proper email address
+  ```
 3. Automate the scenarios you consider essential and why
 
 _P.S: Please don't include any PII (Personal Identifiable Information) so that we can blind review your submission._
