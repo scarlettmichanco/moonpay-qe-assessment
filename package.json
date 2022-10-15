@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "testcafe -S -s test/testcafe/screenshots/ --app-init-delay=3000 chrome"
   },
   "author": "Scarlett Michanco",
   "license": "ISC",
