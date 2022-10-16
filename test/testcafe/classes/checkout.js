@@ -18,6 +18,7 @@ export default class CheckoutPage {
       cardExpiry: input.filter('[id="cardExpiry"]'),
       billingName: input.filter('[id="billingName"]'),
       billingPostalCode: input.filter('[id="billingPostalCode"]'),
+      adjustQty: input.filter('[id="adjustQuantity"]'),
     }
 
     this.submit = {
@@ -26,6 +27,7 @@ export default class CheckoutPage {
       secureButton: button.filter('[id="test-source-authorize-3ds"]'),
       successCard: button.withText('Success'),
       authCard: button.withText('Authentication'),
+      updateQuantity: button.filter('.AdjustQuantityFooter-btn'),
       declineCard: button.withText('Authentication'),
       declinedCardErrorMessage: span.withText('Your card was declined. Please try a different card.')
     }

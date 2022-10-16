@@ -5,7 +5,6 @@ const button = Selector('button');
 
 export default class Validators {
   constructor() {
-
     this.cart = {
       itemQuantity: button.filter('.LineItem-adjustableQty'),
       cartTotal:  Selector('#ProductSummary-totalAmount'),
