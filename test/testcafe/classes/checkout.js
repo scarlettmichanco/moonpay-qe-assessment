@@ -4,6 +4,7 @@ import { Selector, t } from 'testcafe';
 // alternate could be like ex: const email = Selector('input').withAttribute('id','email');
 const input = Selector('input');
 const button = Selector('button');
+const div = Selector('div');
 
 
 export default class CheckoutPage {
@@ -19,7 +20,18 @@ export default class CheckoutPage {
     }
 
     this.submit = {
-      submitButton: button.filter('.SubmitButton');
+      submitButton: button.filter('.SubmitButton'),
+      restartButton: button.withText('Restart demo'),
+      successCard: button.withText('Success'),
+      authCard: button.withText('Authentication'),
+      declineCard: button.withText('Authentication'),
+    }
+
+    this.currency = {
+      currencySelectorDefault: Selector('.DropdownSelect-LabelLeft').withText('United States'),
+      currencySelectorAus: Selector('.DropdownSelect-LabelLeft').withText('Australia'),
+      usFiat: Selector('.DropdownSelect-ListItem').withText('United States'),
+      ausFiat: Selector('.DropdownSelect-ListItem').withText('Australia')
     }
   }
 }

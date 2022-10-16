@@ -1,49 +1,63 @@
 // UI Test for https://checkout.stripe.dev/preview
-import { ClientFunction } from 'testcafe';
+import { ClientFunction, Selector, t  } from 'testcafe';
+import CheckoutPage from './classes/checkout';
+import Validators from './helpers/validators';
 //
-// import CheckoutPage from './classes/checkout';
-// import Validators from './helpers/validators';
-//
-// const checkoutPage = new CheckoutPage();
-// const replaceText = { replace: true };
+const checkoutPage = new CheckoutPage();
+const validator = new Validators();
+const replaceText = { replace: true };
+
 
 
 fixture('Checkout Page')
   .page`https://checkout.stripe.dev/preview`;
 
-test('Navigate to the Docs', async t => {
-    await t
-        .navigateTo('https://checkout.stripe.dev/preview');
-});
-  //Verify that payment options are visible and credit card numbers are masked.
-  // * Switching between desktop and mobile doesn't hide any fields and functions as expected.
-  // * Test if changing domains via dropdown effects submission.
-  // * Changing locations also changes currency.
-  // * Item total is equal to the quantity X price.
-  // * Able to check out with each Wallet(Apple/Google)
-  // * Test authorization responses
-  // * Test if on a secure connection
-  // * Test each card type (success/authorization/decline)
-  // * Verify you cant proceed until all required fields are filled
-  // * Authenticate email is proper email address
+test('Submit successful transaction', async t => {
+  // test goes through submission form, clicks submit, stripe handles errors, checks if success modal
+  // appears after successful submission. No network responses tested in this scenario
 
-test('iFrame is visible', async t => {
+
+  // Notes: form automatically adds whitespace between card values so evaluate that in .eql assertions
+
   await t
-    .wait(5500);
+    .switchToIframe('#checkout-demo')
+    .typeText(await checkoutPage.input.email, 'Michanco207@gmail.com', replaceText)
+    .expect(checkoutPage.input.email.value).eql('Michanco207@gmail.com')
+    .typeText(checkoutPage.input.cardNumber,'4242 4242 4242 4242', replaceText)
+    .expect(checkoutPage.input.cardNumber.value).eql('4242 4242 4242 4242')
+    .typeText(checkoutPage.input.cardCvc, '999', replaceText)
+    .expect(checkoutPage.input.cardCvc.value).eql('999')
+    .typeText(checkoutPage.input.cardExpiry, '02/50', replaceText)
+    .expect(checkoutPage.input.cardExpiry.value).eql('02 / 50')
+    .typeText(checkoutPage.input.billingName, 'Scarlett Michanco', replaceText)
+    .expect(checkoutPage.input.billingName.value).eql('Scarlett Michanco')
+    .typeText(checkoutPage.input.billingPostalCode, '02115', replaceText)
+    .expect(checkoutPage.input.billingPostalCode.value).eql('02115')
+    .click(checkoutPage.submit.submitButton)
+    .switchToMainWindow()
+    .expect(checkoutPage.submit.restartButton.visible).ok();
+
 });
-//
-// test('Changing locations also changes currency.', async t => {
-//
-// });
-//
-// test('Validate successful transaction', async t => {
-//
-// });
-//
-// test('Validate declined transaction', async t => {
-//
-// });
-//
-// test('Validate declined transaction', async t => {
-//
-// });
+
+test('Changing locations also changes currency.', async t => {
+  await t
+  .switchToIframe('#checkout-demo')
+  .wait(500);
+  let value = await validator.cart.cartTotal.innerText;
+
+  await t
+    .switchToMainWindow()
+    .click(checkoutPage.currency.currencySelectorDefault)
+    .wait(200)
+    .click(checkoutPage.currency.ausFiat)
+    .expect(checkoutPage.currency.ausFiat.innerText).eql('Australia')
+    .switchToIframe('#checkout-demo')
+    .wait(500)
+    //currency should not equal original selected US, should be A174.00
+    .expect(validator.cart.cartTotal.innerText).notEql(value)
+    .switchToMainWindow()
+    .wait(500)
+    .click(checkoutPage.currency.currencySelectorAus)
+    .click(checkoutPage.currency.usFiat)
+    .expect(checkoutPage.currency.usFiat.innerText).eql('United States');
+});
