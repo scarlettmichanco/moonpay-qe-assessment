@@ -5,6 +5,7 @@ import { Selector, t } from 'testcafe';
 const input = Selector('input');
 const button = Selector('button');
 const div = Selector('div');
+const span = Selector('span');
 
 
 export default class CheckoutPage {
@@ -22,9 +23,11 @@ export default class CheckoutPage {
     this.submit = {
       submitButton: button.filter('.SubmitButton'),
       restartButton: button.withText('Restart demo'),
+      secureButton: button.filter('[id="test-source-authorize-3ds"]'),
       successCard: button.withText('Success'),
       authCard: button.withText('Authentication'),
       declineCard: button.withText('Authentication'),
+      declinedCardErrorMessage: span.withText('Your card was declined. Please try a different card.')
     }
 
     this.currency = {

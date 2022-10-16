@@ -2,7 +2,7 @@
 import { ClientFunction, Selector, t  } from 'testcafe';
 import CheckoutPage from './classes/checkout';
 import Validators from './helpers/validators';
-//
+
 const checkoutPage = new CheckoutPage();
 const validator = new Validators();
 const replaceText = { replace: true };
@@ -21,16 +21,16 @@ test('Submit successful transaction', async t => {
 
   await t
     .switchToIframe('#checkout-demo')
-    .typeText(await checkoutPage.input.email, 'Michanco207@gmail.com', replaceText)
-    .expect(checkoutPage.input.email.value).eql('Michanco207@gmail.com')
+    .typeText(await checkoutPage.input.email, 'FooBarBaz@gmail.com', replaceText)
+    .expect(checkoutPage.input.email.value).eql('FooBarBaz@gmail.com')
     .typeText(checkoutPage.input.cardNumber,'4242 4242 4242 4242', replaceText)
     .expect(checkoutPage.input.cardNumber.value).eql('4242 4242 4242 4242')
     .typeText(checkoutPage.input.cardCvc, '999', replaceText)
     .expect(checkoutPage.input.cardCvc.value).eql('999')
     .typeText(checkoutPage.input.cardExpiry, '02/50', replaceText)
     .expect(checkoutPage.input.cardExpiry.value).eql('02 / 50')
-    .typeText(checkoutPage.input.billingName, 'Scarlett Michanco', replaceText)
-    .expect(checkoutPage.input.billingName.value).eql('Scarlett Michanco')
+    .typeText(checkoutPage.input.billingName, 'Foo Bar', replaceText)
+    .expect(checkoutPage.input.billingName.value).eql('Foo Bar')
     .typeText(checkoutPage.input.billingPostalCode, '02115', replaceText)
     .expect(checkoutPage.input.billingPostalCode.value).eql('02115')
     .click(checkoutPage.submit.submitButton)
@@ -60,4 +60,58 @@ test('Changing locations also changes currency.', async t => {
     .click(checkoutPage.currency.currencySelectorAus)
     .click(checkoutPage.currency.usFiat)
     .expect(checkoutPage.currency.usFiat.innerText).eql('United States');
+});
+
+test('Test for declined transaction', async t => {
+  await t
+    .switchToIframe('#checkout-demo')
+    .typeText(await checkoutPage.input.email, 'FooBarBaz@gmail.com', replaceText)
+    .expect(checkoutPage.input.email.value).eql('FooBarBaz@gmail.com')
+    .typeText(checkoutPage.input.cardNumber,'4000 0000 0000 0002', replaceText)
+    .expect(checkoutPage.input.cardNumber.value).eql('4000 0000 0000 0002')
+    .typeText(checkoutPage.input.cardCvc, '999', replaceText)
+    .expect(checkoutPage.input.cardCvc.value).eql('999')
+    .typeText(checkoutPage.input.cardExpiry, '02/50', replaceText)
+    .expect(checkoutPage.input.cardExpiry.value).eql('02 / 50')
+    .typeText(checkoutPage.input.billingName, 'Foo Bar', replaceText)
+    .expect(checkoutPage.input.billingName.value).eql('Foo Bar')
+    .typeText(checkoutPage.input.billingPostalCode, '02115', replaceText)
+    .expect(checkoutPage.input.billingPostalCode.value).eql('02115')
+    .click(checkoutPage.submit.submitButton)
+    .wait(1000)
+    .expect(checkoutPage.submit.declinedCardErrorMessage.visible).ok();
+});
+
+
+test('Test for Authorized User 3D Secure 2 transaction', async t => {
+  await t
+    .switchToIframe('#checkout-demo')
+    .typeText(await checkoutPage.input.email, 'FooBarBaz@gmail.com', replaceText)
+    .expect(checkoutPage.input.email.value).eql('FooBarBaz@gmail.com')
+    .typeText(checkoutPage.input.cardNumber,'4000 0000 0000 3220', replaceText)
+    .expect(checkoutPage.input.cardNumber.value).eql('4000 0000 0000 3220')
+    .typeText(checkoutPage.input.cardCvc, '999', replaceText)
+    .expect(checkoutPage.input.cardCvc.value).eql('999')
+    .typeText(checkoutPage.input.cardExpiry, '02/50', replaceText)
+    .expect(checkoutPage.input.cardExpiry.value).eql('02 / 50')
+    .typeText(checkoutPage.input.billingName, 'Foo Bar', replaceText)
+    .expect(checkoutPage.input.billingName.value).eql('Foo Bar')
+    .typeText(checkoutPage.input.billingPostalCode, '02115', replaceText)
+    .expect(checkoutPage.input.billingPostalCode.value).eql('02115')
+    .click(checkoutPage.submit.submitButton)
+    .wait(5000);
+
+  await t
+    .switchToIframe('body > div:nth-child(1) > iframe')
+    .expect(Selector('#challengeFrame').exists).ok()
+    .switchToIframe('#challengeFrame')
+    .expect(checkoutPage.submit.secureButton.visible).ok();
+});
+
+test('Update Cart quantities and checking that total is correct', async t => {
+
+});
+
+test('Cant submit unless all required fields are filled', async t => {
+
 });
