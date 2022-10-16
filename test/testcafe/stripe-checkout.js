@@ -28,21 +28,22 @@ test('Navigate to the Docs', async t => {
   // * Authenticate email is proper email address
 
 test('iFrame is visible', async t => {
-
+  await t
+    .wait(5500);
 });
-
-test('Changing locations also changes currency.', async t => {
-
-});
-
-test('Validate successful transaction', async t => {
-
-});
-
-test('Validate declined transaction', async t => {
-
-});
-
-test('Validate declined transaction', async t => {
-
-});
+//
+// test('Changing locations also changes currency.', async t => {
+//
+// });
+//
+// test('Validate successful transaction', async t => {
+//
+// });
+//
+// test('Validate declined transaction', async t => {
+//
+// });
+//
+// test('Validate declined transaction', async t => {
+//
+// });
